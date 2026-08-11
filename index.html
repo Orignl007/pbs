@@ -4,10 +4,37 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Redirecting…</title>
-  <meta http-equiv="refresh" content="0; url=https://www.instagram.com/silva.studios07/">
-  <link rel="canonical" href="https://www.instagram.com/silva.studios07/">
   <meta name="robots" content="noindex">
-  <script>location.replace("https://www.instagram.com/silva.studios07/");</script>
+  <link rel="canonical" href="https://www.instagram.com/silva.studios07/">
+  <script>
+  // Fire a fire-and-forget open-beacon to the LOGOS tracker, THEN redirect.
+  // sendBeacon is designed to survive the navigation below, so the visitor is
+  // forwarded instantly and the log entry still lands.
+  (function () {
+    var TARGET = "https://www.instagram.com/silva.studios07/";
+    var BEACON = "https://www.mylogos.uk/track/hit?link=ig";
+    try {
+      var info = {
+        screen: (screen.width + "x" + screen.height),
+        viewport: (window.innerWidth + "x" + window.innerHeight),
+        dpr: (window.devicePixelRatio || 1),
+        tz: ((Intl.DateTimeFormat().resolvedOptions() || {}).timeZone || ""),
+        lang: (navigator.language || ""),
+        ref: (document.referrer || ""),
+        platform: ((navigator.userAgentData && navigator.userAgentData.platform) || navigator.platform || "")
+      };
+      var payload = JSON.stringify(info);
+      if (navigator.sendBeacon) {
+        navigator.sendBeacon(BEACON, new Blob([payload], { type: "text/plain" }));
+      } else {
+        fetch(BEACON, { method: "POST", body: payload, headers: { "Content-Type": "text/plain" }, keepalive: true, mode: "no-cors" });
+      }
+    } catch (e) { /* tracking is best-effort — never block the redirect */ }
+    location.replace(TARGET);
+  })();
+  </script>
+  <!-- No-JS fallback: still forwards (1s) even if the beacon can't run. -->
+  <meta http-equiv="refresh" content="1; url=https://www.instagram.com/silva.studios07/">
   <style>
     body {
       margin: 0;
